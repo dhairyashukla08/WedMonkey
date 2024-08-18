@@ -1,0 +1,75 @@
+.login-signup-container {
+    background-color: #fdf7f2; /* Ivory background */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    margin: 0 auto;
+    font-family: 'Lora', serif; /* Elegant font */
+}
+
+.toggle-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.toggle-buttons button {
+    background-color: #b76e79; /* Rose Gold */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.toggle-buttons button.active {
+    background-color: #d4a373; /* Soft Gold for the active button */
+}
+
+.toggle-buttons button:hover {
+    background-color: #b76e79; /* Hover color for non-active buttons */
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-container h2 {
+    font-family: 'Great Vibes', cursive; /* Elegant cursive font */
+    font-size: 2.5rem;
+    color: #b76e79; /* Rose Gold */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-container input {
+    background-color: #f8e1e7; /* Blush Pink */
+    color: #3e3e3e; /* Deep Charcoal */
+    font-family: 'Lora', serif;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.form-container button {
+    background-color: #b76e79; /* Rose Gold */
+    color: white;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+    background-color: #d4a373; /* Soft Gold */
+}

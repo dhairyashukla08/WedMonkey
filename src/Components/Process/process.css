@@ -1,0 +1,97 @@
+.heading {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+.box-area{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 70px;
+    
+}
+.single-box{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: auto;
+    border-radius: 4px;
+    background-color: #fff;
+    text-align: center;
+    margin: 20px;
+    padding: 20px;
+    transition: .3s;
+    box-shadow: 1px 0 5px 0 rgba(0,0,0,0.6) ;
+    margin-top: 100px;
+    margin-bottom: 150px;
+}
+.img-area{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height:80px;
+    border: 6px solid hotpink;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    padding: 20px;
+    background-size: cover;
+    background-position: center center;
+}
+.single-box:nth-child(1) .img-area{
+    background-image: url('./../images/selectcard.png');
+}
+.single-box:nth-child(2) .img-area{
+    background-image: url('./../images/formfilling.png');
+}
+.single-box:nth-child(3) .img-area{
+    background-image: url('./../images/invitation.png');
+}
+.header-text{
+    font-size: 24px;
+    font-weight: 500px;
+    line-height: 48px;
+}
+.img-text h3{
+    margin: 10px 0;
+}
+.img-text p{
+    font-size: 15px;
+    font-weight: 400px;
+    line-height: 30px;
+}
+/* .single-box:hover{
+    background: linear-gradient(45deg, #2c3e50, #34495e);
+    color:#fff;
+} */
+.single-box:hover .line{
+    background-color: #fff;
+}
+.create-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: hotpink;
+    background-color: lightgrey;
+    border: 2px solid hotpink;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
+  .create-button:hover {
+    color: white;
+    background-color: hotpink;
+    
+    
+  }
+  
