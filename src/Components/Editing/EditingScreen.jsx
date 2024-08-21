@@ -1,10 +1,5 @@
 
-
-
 //original k baad wala 
-
-
-
 import React, { useRef, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import cardData from './cardData';
@@ -162,59 +157,59 @@ const [cropEnd, setCropEnd] = useState(null);
   
   
 
-  const handleSave = () => {
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'px',
-      format: [canvasRef.current.width, canvasRef.current.height]
-    });
+  // const handleSave = () => {
+  //   const pdf = new jsPDF({
+  //     orientation: 'portrait',
+  //     unit: 'px',
+  //     format: [canvasRef.current.width, canvasRef.current.height]
+  //   });
 
-    const loadPage = (index) => {
-      return new Promise((resolve) => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        const image = new Image();
-        image.src = selectedCard.thumbnails[index];
-        image.onload = () => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+  //   const loadPage = (index) => {
+  //     return new Promise((resolve) => {
+  //       const canvas = canvasRef.current;
+  //       const ctx = canvas.getContext('2d');
+  //       const image = new Image();
+  //       image.src = selectedCard.thumbnails[index];
+  //       image.onload = () => {
+  //         ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-          pagesData[index].texts.forEach(text => {
-            ctx.font = `${text.fontSize || selectedFontSize}px ${text.font || selectedFont}`;
-            ctx.fillStyle = text.color || selectedColor;
-            ctx.fillText(text.content, text.x, text.y);
-          });
+  //         pagesData[index].texts.forEach(text => {
+  //           ctx.font = `${text.fontSize || selectedFontSize}px ${text.font || selectedFont}`;
+  //           ctx.fillStyle = text.color || selectedColor;
+  //           ctx.fillText(text.content, text.x, text.y);
+  //         });
 
-          pagesData[index].images.forEach(imageData => {
-            const img = new Image();
-            img.src = imageData.src;
-            img.onload = () => {
-              ctx.drawImage(img, imageData.x, imageData.y, 150, 150);
-            };
-          });
+  //         pagesData[index].images.forEach(imageData => {
+  //           const img = new Image();
+  //           img.src = imageData.src;
+  //           img.onload = () => {
+  //             ctx.drawImage(img, imageData.x, imageData.y, 150, 150);
+  //           };
+  //         });
 
-          resolve(canvas.toDataURL('image/png'));
-        };
-      });
-    };
+  //         resolve(canvas.toDataURL('image/png'));
+  //       };
+  //     });
+  //   };
 
-    const generatePDF = async () => {
-      for (let i = 0; i < pagesData.length; i++) {
-        const imgData = await loadPage(i);
-        if (i === 0) {
-          pdf.addImage(imgData, 'PNG', 0, 0, canvasRef.current.width, canvasRef.current.height);
-        } else {
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, 0, canvasRef.current.width, canvasRef.current.height);
-        }
-      }
-      pdf.save(`card_${selectedCard.title}.pdf`);
-      // return pdf.output('arraybuffer');
-    };
-    generatePDF();
+  //   const generatePDF = async () => {
+  //     for (let i = 0; i < pagesData.length; i++) {
+  //       const imgData = await loadPage(i);
+  //       if (i === 0) {
+  //         pdf.addImage(imgData, 'PNG', 0, 0, canvasRef.current.width, canvasRef.current.height);
+  //       } else {
+  //         pdf.addPage();
+  //         pdf.addImage(imgData, 'PNG', 0, 0, canvasRef.current.width, canvasRef.current.height);
+  //       }
+  //     }
+  //     pdf.save(`card_${selectedCard.title}.pdf`);
+  //     // return pdf.output('arraybuffer');
+  //   };
+  //   generatePDF();
 
    
-  };
+  // };
 
   const getTextAtPosition = (x, y) => {
     for (let text of pagesData[selectedPage].texts) {
@@ -300,62 +295,39 @@ const [cropEnd, setCropEnd] = useState(null);
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging || !currentText || isEditing && !isImageDragging && !isResizing) return;
-
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
+  
     if (isDragging && currentText) {
+      // Dragging text logic
       const newPagesData = [...pagesData];
       const textIndex = newPagesData[selectedPage].texts.findIndex(t => t.id === currentText.id);
-      newPagesData[selectedPage].texts[textIndex] = { ...currentText, x: x - offset.x, y: y - offset.y };
+      newPagesData[selectedPage].texts[textIndex].x = x - offset.x;
+      newPagesData[selectedPage].texts[textIndex].y = y - offset.y;
       setPagesData(newPagesData);
     } else if (isImageDragging && currentImage) {
+      // Dragging image logic
       const newPagesData = [...pagesData];
       const imageIndex = newPagesData[selectedPage].images.findIndex(img => img.id === currentImage.id);
-      // newPagesData[selectedPage].images[imageIndex] = { ...currentImage, x: x - imageOffset.x, y: y - imageOffset.y };
-      // setPagesData(newPagesData);
-      if (currentImage.resizingHandle === 'top-left') {
-        newPagesData[selectedPage].images[imageIndex].width += currentImage.x - x;
-        newPagesData[selectedPage].images[imageIndex].height += currentImage.y - y;
-        newPagesData[selectedPage].images[imageIndex].x = x;
-        newPagesData[selectedPage].images[imageIndex].y = y;
-      } else if (currentImage.resizingHandle === 'top-right') {
-        newPagesData[selectedPage].images[imageIndex].width = x - currentImage.x;
-        newPagesData[selectedPage].images[imageIndex].height += currentImage.y - y;
-        newPagesData[selectedPage].images[imageIndex].y = y;
-      } else if (currentImage.resizingHandle === 'bottom-left') {
-        newPagesData[selectedPage].images[imageIndex].width += currentImage.x - x;
-        newPagesData[selectedPage].images[imageIndex].height = y - currentImage.y;
-        newPagesData[selectedPage].images[imageIndex].x = x;
-      } else if (currentImage.resizingHandle === 'bottom-right') {
+      newPagesData[selectedPage].images[imageIndex].x = x - imageOffset.x;
+      newPagesData[selectedPage].images[imageIndex].y = y - imageOffset.y;
+      setPagesData(newPagesData);
+    } else if (isResizing && currentImage) {
+      // Resizing image logic
+      const newPagesData = [...pagesData];
+      const imageIndex = newPagesData[selectedPage].images.findIndex(img => img.id === currentImage.id);
+      // Adjust resizing based on handle
+      // Example for bottom-right handle
+      if (currentImage.resizingHandle === 'bottom-right') {
         newPagesData[selectedPage].images[imageIndex].width = x - currentImage.x;
         newPagesData[selectedPage].images[imageIndex].height = y - currentImage.y;
       }
       setPagesData(newPagesData);
-    } else {
-      const newPagesData = [...pagesData];
-      const imageIndex = newPagesData[selectedPage].images.findIndex(img => img.id === currentImage.id);
-      newPagesData[selectedPage].images[imageIndex] = { ...currentImage, x: x - imageOffset.x, y: y - imageOffset.y };
-      setPagesData(newPagesData);
-    
     }
-  //   else if(isResizing && currentImage){
-  //     const newWidth=Math.max(10,x-currentImage.x);
-  //     const newHeight=Math.max(10,y-currentImage.y);
-  //     const newPagesData=[...pagesData];
-  //     const imageIndex=newPagesData[selectedPage].images.findIndex(img => img.id === currentImage.id);
-  //     newPagesData[selectedPage].images[imageIndex] = { 
-  //       ...currentImage, 
-  //       width: newWidth, 
-  //       height: newHeight 
-  //     };
-  //     setPagesData(newPagesData);
-  //   }
-  // };
   };
+  
 
   const handleMouseUp = () => {
     setIsDragging(false);
@@ -512,6 +484,67 @@ const [cropEnd, setCropEnd] = useState(null);
     '#800000', '#808000', '#008000', '#800080', '#008080',
     '#000080'
   ];
+
+
+  const handleSave = () => {
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'px',
+      format: [canvasRef.current.width, canvasRef.current.height],
+    });
+  
+    const loadPage = (index) => {
+      return new Promise((resolve) => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const image = new Image();
+        image.src = selectedCard.thumbnails[index];
+  
+        image.onload = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+  
+          const imagePromises = pagesData[index].images.map((imageData) => {
+            return new Promise((resolveImage) => {
+              const img = new Image();
+              img.src = imageData.src;
+  
+              img.onload = () => {
+                ctx.drawImage(img, imageData.x, imageData.y, 150, 150);
+                resolveImage();
+              };
+            });
+          });
+  
+          Promise.all(imagePromises).then(() => {
+            pagesData[index].texts.forEach((text) => {
+              ctx.font = `${text.fontSize || selectedFontSize}px ${text.font || selectedFont}`;
+              ctx.fillStyle = text.color || selectedColor;
+              ctx.fillText(text.content, text.x, text.y);
+            });
+  
+            resolve(canvas.toDataURL('image/png'));
+          });
+        };
+      });
+    };
+  
+    const generatePDF = async () => {
+      for (let i = 0; i < pagesData.length; i++) {
+        const imgData = await loadPage(i);
+        if (i === 0) {
+          pdf.addImage(imgData, 'PNG', 0, 0, canvasRef.current.width, canvasRef.current.height);
+        } else {
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, 0, canvasRef.current.width, canvasRef.current.height);
+        }
+      }
+      pdf.save(`card_${selectedCard.title}.pdf`);
+    };
+  
+    generatePDF();
+  };
+  
 
   return (
     <div className="editing-screen-container">
